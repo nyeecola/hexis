@@ -2,9 +2,9 @@
 .include "src/dma.s"
 .include "src/sprite.s"
 .include "src/background.s"
+.include "src/hexis.s"
 
-.include "bin/bg0.s"
-.include "bin/obj0.s"
+.include "src/bg0.s"
 
 .text
 .align 2
@@ -21,13 +21,24 @@ main:
     mov r0, #0x4                    @Setting up BG0 with:
     lsl r0, #24
     add r0, #8
-    mov r1, #0b110001               @Priority = 0; TileBase = 0; Mosaic = false; palette = 16/16; MapBase = 4; Size = 512x512
+    mov r1, #0b1                    @Priority = 0; TileBase = 0; Mosaic = false; palette = 16/16; MapBase = 4; Size = 256x256
     lsl r1, #10
     strh r1, [r0]
 
     bl enable_vblank_interrupt
 
-    copy_512x512_bg bg0 25*8 0 4
+    copy_256x256_bg bg0 4*8 0 4
+
+    mov r0, #1
+    mov r1, #4
+    mov r2, #4
+    bl fill_block
+    mov r0, #0
+    mov r1, #3
+    mov r2, #4
+    bl fill_block
+    
+    
 
 forever:
 

@@ -6,7 +6,6 @@ all: gfx
 
 gfx: force
 	mkdir -p bin
-	grit gfx/bg0.png -o bin/bg0
 	grit gfx/obj0.png -o bin/obj0
 	rm bin/*.h
 
