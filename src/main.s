@@ -6,6 +6,8 @@
 
 .include "src/bg0.s"
 
+timer .req r7
+
 .text
 .align 2
 .thumb_func
@@ -29,16 +31,20 @@ main:
 
     copy_256x256_bg bg0 4*8 0 4
 
+    @ TEST CODE
     mov r0, #1
     mov r1, #4
     mov r2, #4
+    mov r3, #3
     bl fill_block
     mov r0, #0
     mov r1, #3
     mov r2, #4
+    mov r3, #1
     bl fill_block
     
     
+    mov timer, #0
 
 forever:
 
@@ -89,11 +95,34 @@ input.end:
 
     swi 0x5                         @Asks BIOS to wait for VBlank
 
+    add timer, #1
+    cmp timer, #30
+    blt skip_timer_handler
+    mov timer, #0
+    ldr r0, =active_block_position
+    ldr r1, [r0]
+    cmp r1, #0
+    beq prevent_underflow
+    sub r1, #1                      @remove 1 from Y pos
+prevent_underflow:
+    strh r1, [r0]
+skip_timer_handler:
+
+    @ draw blocks
+
+    ldr r0, =active_block_position
+    ldrh r0, [r0]
+    mov r1, r0
+    mov r2, #0xFF
+    and r1, r2
+    lsr r0, #8                      @TODO: should we worry about leading 1's?
+    mov r2, #4
+    mov r3, #3
+    bl fill_block
+
     b forever
 
 .section .iwram
 .align 2
-sprite_rotate:
-    .hword 0b100000000              @X scale (8bit fractional part)
-    .hword 0b100000000              @Y scale (8bit fractional part)
-    .hword 0x0                      @angle
+active_block_position:
+    .hword 0x0516                      @ first byte is X, second byte is Y
