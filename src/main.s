@@ -6,6 +6,10 @@
 
 .include "src/bg0.s"
 
+.set INPUT_DELAY, 4
+.set FALLING_DELAY, 30
+
+input_timer .req r6
 timer .req r7
 
 .text
@@ -45,8 +49,11 @@ main:
     
     
     mov timer, #0
+    mov input_timer, #0
 
 forever:
+
+    mov r3, #FALLING_DELAY
 
     @ read input
 
@@ -59,6 +66,11 @@ forever:
     mvn r0, r0                      @Makes pressed button = 1 (default is = 0)
 
 input.start:
+    cmp input_timer, #0
+    beq input.right
+    sub input_timer, #1
+    b input.end
+
 input.right:
     mov r1, #1
     lsl r1, #4
@@ -67,6 +79,15 @@ input.right:
     beq input.left
     @ handle right pressed here
 
+    ldr r2, =active_block_position
+    ldrb r1, [r2,#1]
+    cmp r1, #9
+    beq input.left
+    add r1, #1
+    strb r1, [r2,#1]
+
+    mov input_timer, #INPUT_DELAY
+
 input.left:
     mov r1, #1
     lsl r1, #5
@@ -74,6 +95,15 @@ input.left:
     cmp r1, #0
     beq input.up
     @ handle left pressed here
+
+    ldr r2, =active_block_position
+    ldrb r1, [r2,#1]
+    cmp r1, #0
+    beq input.up
+    sub r1, #1
+    strb r1, [r2,#1]
+
+    mov input_timer, #INPUT_DELAY
 
 input.up:
     mov r1, #1
@@ -91,10 +121,16 @@ input.down:
     beq input.end
     @ handle down pressed here
 
+    mov r3, #2
+    @ purposefully not adding input delay
+
 input.end:
 
+    
+    @ gravity
+
     add timer, #1
-    cmp timer, #30
+    cmp timer, r3
     blt skip_timer_handler
     mov timer, #0
     ldr r0, =active_block_position
