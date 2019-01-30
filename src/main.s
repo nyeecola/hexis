@@ -80,9 +80,18 @@ input.right:
     @ handle right pressed here
 
     ldr r2, =active_block_position
-    ldrb r1, [r2,#1]
+    ldrb r1, [r2,#1]                @ X
     cmp r1, #9
     beq input.left
+    ldrb r4, [r2]                   @ Y
+    mov r5, #10
+    mul r4, r5
+    add r4, r1
+    ldr r5, =hexis_grid
+    add r5, r4
+    ldrb r5, [r5,#1]
+    cmp r5, #2
+    bne input.left
     add r1, #1
     strb r1, [r2,#1]
 
@@ -97,9 +106,19 @@ input.left:
     @ handle left pressed here
 
     ldr r2, =active_block_position
-    ldrb r1, [r2,#1]
+    ldrb r1, [r2,#1]                @ X
     cmp r1, #0
     beq input.up
+    ldrb r4, [r2]                   @ Y
+    mov r5, #10
+    mul r4, r5
+    add r4, r1
+    ldr r5, =hexis_grid
+    add r5, r4
+    sub r5, #1
+    ldrb r5, [r5]
+    cmp r5, #2
+    bne input.up
     sub r1, #1
     strb r1, [r2,#1]
 
@@ -161,7 +180,60 @@ fix_to_grid:
     strb r1, [r3,r4]                @ fixed in grid
     ldrh r1, =0x0516
     strh r1, [r0]                   @ reset active block position
+
+
+    @ check if any lines were cleared
     
+    ldr r0, =hexis_grid
+    mov r1, #0                      @ keeps count of lines cleared
+    mov r4, r0                      @ Y (line address)
+
+line_loop:
+    mov r5, #0                      @ byte index
+byte_loop:
+    ldrb r3, [r4, r5]
+    add r5, #1
+    cmp r3, #2
+    beq drop_line
+    cmp r5, #10
+    bne byte_loop
+    add r1, #1                      @ line cleared
+    b   end_byte_loop
+
+drop_line:
+    mov r5, #10
+    mul r5, r1
+    sub r5, r4
+    neg r5, r5
+    ldrb r2, [r4, #0]
+    strb r2, [r5, #0]
+    ldrb r2, [r4, #1]
+    strb r2, [r5, #1]
+    ldrb r2, [r4, #2]
+    strb r2, [r5, #2]
+    ldrb r2, [r4, #3]
+    strb r2, [r5, #3]
+    ldrb r2, [r4, #4]
+    strb r2, [r5, #4]
+    ldrb r2, [r4, #5]
+    strb r2, [r5, #5]
+    ldrb r2, [r4, #6]
+    strb r2, [r5, #6]
+    ldrb r2, [r4, #7]
+    strb r2, [r5, #7]
+    ldrb r2, [r4, #8]
+    strb r2, [r5, #8]
+    ldrb r2, [r4, #9]
+    strb r2, [r5, #9]
+
+end_byte_loop:
+
+    add r4, #10
+    mov r2, r0
+    add r2, #200
+    cmp r4, r2
+    blt line_loop
+
 
 skip_timer_handler:
 
@@ -217,5 +289,6 @@ end_draw_grid:
 .align 2
 active_block_position:
     .hword 0x0516                      @ first byte is X, second byte is Y
+.align 2
 hexis_grid:
     .fill 22*10,1,2
