@@ -1,5 +1,3 @@
-.text
-
 @ Copies GRIT generated data to vram
 .macro copy_512x512_bg name tile_count tilebase mapbase
     push { r0-r2 }
