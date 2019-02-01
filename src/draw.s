@@ -40,8 +40,10 @@ draw_active_block:
 
     ldr r2, =active_block_position
 
-    ldrb r0, [r2,#1]                @ Loads X
-    ldrb r1, [r2]                   @ Loads Y
+    mov r3, #1
+    ldrsb r0, [r2,r3]               @ Loads X
+    mov r3, #0
+    ldrsb r1, [r2,r3]               @ Loads Y
     mov r2, #4                      @ Mapbase 4
     mov r3, #3                      @ Red
     bl fill_block                   @ Fills active block on screen

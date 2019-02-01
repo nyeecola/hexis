@@ -29,11 +29,13 @@ input.right:
     @ handle right pressed here
 
     ldr r2, =active_block_position
-    ldrb r1, [r2,#1]                @ Loads X
+    mov r4, #1
+    ldrsb r1, [r2,r4]               @ Loads X
     cmp r1, #9                      @If already on the far right, ignore this input
     beq input.left
 
-    ldrb r4, [r2]                   @ Loads Y
+    mov r4, #0
+    ldrsb r4, [r2,r4]               @ Loads Y
     mov r5, #10
     mul r4, r5
     add r4, r1
@@ -56,11 +58,13 @@ input.left:
     @ handle left pressed here
 
     ldr r2, =active_block_position
-    ldrb r1, [r2,#1]                @ Loads X
+    mov r4, #1
+    ldrsb r1, [r2,r4]               @ Loads X
     cmp r1, #0                      @If already on the far left, ignore this input
     beq input.up
 
-    ldrb r4, [r2]                   @ Loads Y
+    mov r4, #0
+    ldrsb r4, [r2,r4]               @ Loads Y
     mov r5, #10
     mul r4, r5
     add r4, r1

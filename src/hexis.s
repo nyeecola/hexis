@@ -39,8 +39,10 @@ do_game_cycle:
 
     mov timer, #0                   @ Resets timer
     ldr r0, =active_block_position
-    ldrb r1, [r0]                   @ Y pos
-    ldrb r2, [r0,#1]                @ X pos
+    mov r3, #0
+    ldrsb r1, [r0,r3]               @ Y pos
+    mov r3, #1
+    ldrsb r2, [r0,r3]               @ X pos
     ldr r3, =hexis_grid
 
     cmp r1, #0                      @ if got to the bottom of the screen
