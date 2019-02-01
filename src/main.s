@@ -66,6 +66,155 @@ end_timer_handler:
 .align 2
 active_block_position:
     .hword 0x0516                      @ first byte is X, second byte is Y
+
 .align 2
 hexis_grid:
     .fill 22*10,1,2                    @Each byte is a grit pallete to be draw
+
+.align 2
+hexis_array:
+    .byte 2,2,2,2
+    .byte 2,3,3,2
+    .byte 2,3,3,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 2,3,3,2
+    .byte 2,3,3,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 2,3,3,2
+    .byte 2,3,3,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 2,3,3,2
+    .byte 2,3,3,2
+    .byte 2,2,2,2
+
+
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+
+    .byte 2,2,2,2
+    .byte 4,4,4,4
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+
+    .byte 2,2,2,2
+    .byte 4,4,4,4
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
+
+    .byte 2,5,2,2
+    .byte 5,5,5,2
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
+    .byte 2,5,2,2
+    .byte 2,5,5,2
+    .byte 2,5,2,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 5,5,5,2
+    .byte 2,5,2,2
+    .byte 2,2,2,2
+
+    .byte 2,5,2,2
+    .byte 5,5,2,2
+    .byte 2,5,2,2
+    .byte 2,2,2,2
+
+
+    .byte 2,6,2,2
+    .byte 2,6,2,2
+    .byte 2,6,6,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 6,6,6,2
+    .byte 6,2,2,2
+    .byte 2,2,2,2
+
+    .byte 6,6,2,2
+    .byte 2,6,2,2
+    .byte 2,6,2,2
+    .byte 2,2,2,2
+
+    .byte 2,2,6,2
+    .byte 6,6,6,2
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
+
+    .byte 2,7,2,2
+    .byte 2,7,2,2
+    .byte 7,7,2,2
+    .byte 2,2,2,2
+
+    .byte 7,2,2,2
+    .byte 7,7,7,2
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
+    .byte 2,7,7,2
+    .byte 2,7,2,2
+    .byte 2,7,2,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 7,7,7,2
+    .byte 2,2,7,2
+    .byte 2,2,2,2
+
+
+    .byte 2,2,2,2
+    .byte 2,8,8,2
+    .byte 8,8,2,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 8,2,2,2
+    .byte 8,8,2,2
+    .byte 2,8,2,2
+
+    .byte 2,2,2,2
+    .byte 2,8,8,2
+    .byte 8,8,2,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 8,2,2,2
+    .byte 8,8,2,2
+    .byte 2,8,2,2
+
+
+    .byte 2,2,2,2
+    .byte 9,9,2,2
+    .byte 2,9,9,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 2,9,2,2
+    .byte 9,9,2,2
+    .byte 9,2,2,2
+
+    .byte 2,2,2,2
+    .byte 9,9,2,2
+    .byte 2,9,9,2
+    .byte 2,2,2,2
+
+    .byte 2,2,2,2
+    .byte 2,9,2,2
+    .byte 9,9,2,2
+    .byte 9,2,2,2

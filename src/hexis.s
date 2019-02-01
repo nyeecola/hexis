@@ -6,7 +6,14 @@ fill_block:
     @ this functions assumes palette 0 is the one used for the given map base
     @ parameters: x y mapbase color
     @ color must be one of the following:
-    @ - 2 for black/empty, 3 for red
+    @ - 2 for black/empty
+    @ - 3 for red
+    @ - 4 for blue
+    @ - 5 for green
+    @ - 6 for magenta
+    @ - 7 for cyan
+    @ - 8 for yellow
+    @ - 9 for white
     push { r5 }
 
     @ convert block x and y to map x and y
