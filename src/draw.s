@@ -36,7 +36,7 @@ end_draw_grid:
 .thumb_func
 .type draw_active_block, %function
 draw_active_block:
-    push {r0-r3, lr}
+    push {r0-r3, r6, lr}
 
     ldr r2, =active_block_position
 
@@ -44,8 +44,44 @@ draw_active_block:
     ldrsb r0, [r2,r3]               @ Loads X
     mov r3, #0
     ldrsb r1, [r2,r3]               @ Loads Y
-    mov r2, #4                      @ Mapbase 4
-    mov r3, #3                      @ Red
-    bl fill_block                   @ Fills active block on screen
 
-    pop {r0-r3, pc}
+    push {r0-r1}
+    ldr r4, =hexis_array
+    ldr r1, =active_block_type
+    ldrb r1, [r1]
+    ldr r2, =active_block_rotation
+    ldrb r2, [r2]
+    mov r3, #4*16                   @ each block has 4 rotations with 16 bytes each
+    mul r1, r3
+    mov r3, #16
+    mul r2, r3
+    add r4, r1
+    add r4, r2
+    pop {r0-r1}
+
+    mov r6, #0                      @ X offset
+    mov r5, #0                      @ loop index
+block_drawing_loop:
+    ldrb r3, [r4, r5]                @ loads which color to draw (color index in palette)
+    add r5, #1
+    cmp r3, #2
+    beq skip_drawing
+    mov r2, #4                      @ Mapbase 4
+    add r0, r6
+    push {r0-r7}
+    bl fill_block                   @ Fills active block on screen
+    pop {r0-r7}
+
+    sub r0, r6
+skip_drawing:
+    add r6, #1
+    cmp r6, #4
+    bne skip_x_reset
+    mov r6, #0
+    add r1, #1
+skip_x_reset:
+
+    cmp r5, #16
+    bne block_drawing_loop
+
+    pop {r0-r3, r6, pc}

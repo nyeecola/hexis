@@ -66,10 +66,15 @@ end_timer_handler:
 .align 2
 active_block_position:
     .hword 0x0516                      @ first byte is X, second byte is Y
+active_block_type:
+    .byte 0
+active_block_rotation:
+    .byte 0
 
 .align 2
 hexis_grid:
     .fill 22*10,1,2                    @Each byte is a grit pallete to be draw
+
 
 .align 2
 hexis_array:
