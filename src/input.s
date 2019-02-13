@@ -80,11 +80,44 @@ input.down:
     lsl r1, #7
     and r1, r0                      @If "down" bit is set
     cmp r1, #0
-    beq input.end
+    beq input.a
     @ handle down pressed here
 
     mov r3, #2                      @Cuts down game timer, making blocks fall faster
     @ purposefully not adding input delay
+
+input.a:
+    mov r1, #1
+    and r1, r0                      @If "A" bit is set
+    cmp r1, #0
+    beq input.end
+    @ handle A pressed here
+
+    ldr r5, =active_block_position
+    mov r4, #1
+    ldrsb r2, [r5,r4]               @ Loads X
+
+    cmp r2, #0
+    bge skip_adding_padding
+    mov r2, #0
+skip_adding_padding:
+    cmp r2, #7
+    blt skip_subbing_padding
+    mov r2, #6
+skip_subbing_padding:
+    strb r2, [r5,r4]
+
+    ldr r2, =active_block_rotation
+    ldrb r4, [r2]
+    add r4, #1
+    cmp r4, #4
+    bne skip_rotation_reset
+    mov r4, #0
+skip_rotation_reset:
+    strb r4, [r2]
+
+    @TODO: create a separate timer for rotation, probably not enought registers (use RAM)
+    mov input_timer, #ROTATION_DELAY   @Valid input increases the input delay timer
 
 input.end:
     pop {r0-r2, r4, r5, pc}

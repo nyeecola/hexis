@@ -10,7 +10,8 @@ timer .req r7
 
 .include "src/bg0.s"
 
-.set INPUT_DELAY, 7
+.set INPUT_DELAY, 4
+.set ROTATION_DELAY, 14
 .set FALLING_DELAY, 30
 
 .text
@@ -67,7 +68,7 @@ end_timer_handler:
 active_block_position:
     .hword 0x0516                      @ first byte is Y, second byte is X
 active_block_type:
-    .byte 0
+    .byte 1
 active_block_rotation:
     .byte 0
 
