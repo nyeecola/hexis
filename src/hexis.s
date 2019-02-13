@@ -41,17 +41,21 @@ fill_block:
 
 .thumb_func
 .type did_hit_something, %function
+@parameters: x_offset y_offset
 did_hit_something:
     push {r1-r7, lr}
 
-    ldr r2, =active_block_position
+    mov r2, r0                      @ x_offset
+    mov r7, r1                      @ y_offset
+
+    ldr r4, =active_block_position
 
     mov r3, #1
-    ldrsb r0, [r2,r3]               @ Loads X
+    ldrsb r0, [r4,r3]               @ Loads X
     mov r3, #0
-    ldrsb r1, [r2,r3]               @ Loads Y
+    ldrsb r1, [r4,r3]               @ Loads Y
 
-    push {r0-r1}
+    push {r0-r2}
     ldr r4, =hexis_array
     ldr r1, =active_block_type
     ldrb r1, [r1]
@@ -63,7 +67,7 @@ did_hit_something:
     mul r2, r3
     add r4, r1
     add r4, r2
-    pop {r0-r1}
+    pop {r0-r2}
 
     mov r6, #0                      @ X offset
     mov r5, #0                      @ loop index
@@ -75,9 +79,27 @@ collision_loop:
     add r0, r6
 
     push {r0-r7}
+    cmp r7, #0                      @ if falling
+    beq skip_ground_check
     cmp r1, #0
     beq did_hit
-    sub r1, #1
+skip_ground_check:
+    cmp r2, #1
+    bne skip_right_check
+    cmp r0, #9
+    beq did_hit
+skip_right_check:
+    mov r6, #1
+    neg r6, r6
+    cmp r2, r6
+    bne skip_left_check
+    cmp r0, #0
+    beq did_hit
+skip_left_check:
+
+    add r0, r2                      @ x_offset
+    add r1, r7                      @ y_offset
+
     mov r4, #10
     mul r4, r1
     add r4, r0                      @ 10*y + x
@@ -182,10 +204,13 @@ do_game_cycle:
     ldrsb r2, [r0,r3]               @ X pos
     ldr r3, =hexis_grid
 
-    push {r0}
+    push {r0, r1}
+    mov r0, #0
+    mov r1, #1
+    neg r1, r1
     bl did_hit_something
     cmp r0, #0 
-    pop {r0}
+    pop {r0, r1}
     bne skip_gravity
 
     sub r1, #1                      @remove 1 from Y pos
