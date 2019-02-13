@@ -36,7 +36,7 @@ end_draw_grid:
 .thumb_func
 .type draw_active_block, %function
 draw_active_block:
-    push {r0-r3, r6, lr}
+    push {r0-r6, lr}
 
     ldr r2, =active_block_position
 
@@ -62,7 +62,7 @@ draw_active_block:
     mov r6, #0                      @ X offset
     mov r5, #0                      @ loop index
 block_drawing_loop:
-    ldrb r3, [r4, r5]                @ loads which color to draw (color index in palette)
+    ldrb r3, [r4, r5]               @ loads which color to draw (color index in palette)
     add r5, #1
     cmp r3, #2
     beq skip_drawing
@@ -78,10 +78,10 @@ skip_drawing:
     cmp r6, #4
     bne skip_x_reset
     mov r6, #0
-    add r1, #1
+    sub r1, #1
 skip_x_reset:
 
     cmp r5, #16
     bne block_drawing_loop
 
-    pop {r0-r3, r6, pc}
+    pop {r0-r6, pc}

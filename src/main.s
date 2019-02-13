@@ -65,7 +65,7 @@ end_timer_handler:
 .section .iwram
 .align 2
 active_block_position:
-    .hword 0x0516                      @ first byte is X, second byte is Y
+    .hword 0x0516                      @ first byte is Y, second byte is X
 active_block_type:
     .byte 0
 active_block_rotation:
