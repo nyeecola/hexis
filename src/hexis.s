@@ -109,6 +109,67 @@ did_hit:
 
 
 .thumb_func
+.type fix_to_grid, %function
+fix_to_grid:
+    push {r0-r7, lr}
+
+    ldr r2, =active_block_position
+
+    mov r3, #1
+    ldrsb r0, [r2,r3]               @ Loads X
+    mov r3, #0
+    ldrsb r1, [r2,r3]               @ Loads Y
+
+    push {r0-r2}
+    ldr r4, =hexis_array
+    ldr r1, =active_block_type
+    ldrb r1, [r1]
+    ldr r2, =active_block_rotation
+    ldrb r2, [r2]
+    mov r3, #4*16                   @ each block has 4 rotations with 16 bytes each
+    mul r1, r3
+    mov r3, #16
+    mul r2, r3
+    add r4, r1
+    add r4, r2
+    pop {r0-r2}
+
+    mov r6, #0                      @ X offset
+    mov r5, #0                      @ loop index
+fix_block_loop:
+    ldrb r3, [r4, r5]               @ loads which color to draw (color index in palette)
+    add r5, #1
+    cmp r3, #2
+    beq skip_fix_test
+    add r0, r6
+
+    push {r0-r7}
+    ldr r5, =hexis_grid
+    mov r4, #10
+    mul r4, r1
+    add r4, r0                      @ 10*y + x
+    strb r3, [r5,r4]                @ Stores block on grid
+    pop {r0-r7}
+    
+    sub r0, r6
+skip_fix_test:
+    add r6, #1
+    cmp r6, #4
+    bne fix_skip_x_reset
+    mov r6, #0
+    sub r1, #1
+fix_skip_x_reset:
+
+    cmp r5, #16
+    bne fix_block_loop
+
+    ldrh r1, =0x0516
+    strh r1, [r2]                   @ reset active block position
+
+    pop {r0-r7, pc}
+
+
+.thumb_func
 .type do_game_cycle, %function
 do_game_cycle:
     push {r0-r5, lr}
@@ -125,20 +186,14 @@ do_game_cycle:
     bl did_hit_something
     cmp r0, #0 
     pop {r0}
-    bne fix_to_grid
+    bne skip_gravity
 
     sub r1, #1                      @remove 1 from Y pos
     strb r1, [r0]                   @Updates ram
     b end_cycle                     @ Block can fall farther, so skips fix_to_grid
 
-fix_to_grid:
-    mov r4, #10
-    mul r4, r1
-    add r4, r2                      @ 10*y + x
-    mov r1, #3                      
-    strb r1, [r3,r4]                @ Stores block on grid
-    ldrh r1, =0x0516
-    strh r1, [r0]                   @ reset active block position
+skip_gravity:
+    bl fix_to_grid
 
     @ check if any lines were cleared
 
