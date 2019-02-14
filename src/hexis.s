@@ -187,6 +187,19 @@ fix_skip_x_reset:
 
     ldrh r1, =0x0516
     strh r1, [r2]                   @ reset active block position
+    ldr r1, =active_block_type
+    push {r0}
+    push {r1}
+    ldr r0, =random_word
+    bl xorshift32
+    lsr r0, #29
+    cmp r0, #7
+    bne skip_hack
+    mov r0, #0
+skip_hack:
+    pop {r1}
+    strb r0, [r1]
+    pop {r0}
 
     pop {r0-r7, pc}
 

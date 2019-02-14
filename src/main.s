@@ -7,6 +7,7 @@ timer .req r7
 .include "src/hexis.s"
 .include "src/input.s"
 .include "src/draw.s"
+.include "src/prng.s"
 
 .include "src/bg0.s"
 
@@ -35,6 +36,7 @@ main:
 
     bl enable_vblank_interrupt
 
+    @ TODO: what is tile count??
     copy_256x256_bg bg0 4*8 0 4
 
     mov timer, #0
@@ -68,9 +70,12 @@ end_timer_handler:
 active_block_position:
     .hword 0x0516                      @ first byte is Y, second byte is X
 active_block_type:
-    .byte 1
+    .byte 2
 active_block_rotation:
     .byte 0
+
+random_word:
+    .word 0xfa28e0b1
 
 .align 2
 hexis_grid:
