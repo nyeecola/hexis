@@ -36,8 +36,7 @@ main:
 
     bl enable_vblank_interrupt
 
-    @ TODO: what is tile count??
-    copy_256x256_bg bg0 4*8 0 4
+    copy_256x256_bg bg0 10*8 0 4
 
     mov timer, #0
     mov input_timer, #0
