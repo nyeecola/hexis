@@ -57,7 +57,7 @@
     ldr r0, =\name\()Pal            @grit palette
     mov r1, #0x5                    @palette memory
     lsl r1, #24
-    mov r2, #8                      @each color is 16bit
+    mov r2, #8*8                   @each color is 16bit
     bl dma3_copy
 
     pop { r0-r2 }

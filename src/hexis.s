@@ -13,7 +13,7 @@ fill_block:
     @ - 6 for magenta
     @ - 7 for cyan
     @ - 8 for yellow
-    @ - 9 for white
+    @ - 9 for orange
     push { r5 }
 
     @ convert block x and y to map x and y
@@ -33,6 +33,11 @@ fill_block:
     add r1, r0
     lsl r1, #1
     add r5, r1
+
+    mov r1, #3
+    sub r3, #2
+    lsl r3, #12
+    orr r3, r1
     strh r3, [r5]
 
     pop { r5 }
@@ -108,7 +113,7 @@ skip_left_check:
     cmp r3, #2
     bne did_hit
     pop {r0-r7}
-    
+
     sub r0, r6
 skip_hit_test:
     add r6, #1
@@ -172,7 +177,7 @@ fix_block_loop:
     add r4, r0                      @ 10*y + x
     strb r3, [r5,r4]                @ Stores block on grid
     pop {r0-r7}
-    
+
     sub r0, r6
 skip_fix_test:
     add r6, #1
@@ -222,7 +227,7 @@ do_game_cycle:
     mov r1, #1
     neg r1, r1
     bl did_hit_something
-    cmp r0, #0 
+    cmp r0, #0
     pop {r0, r1}
     bne skip_gravity
 
