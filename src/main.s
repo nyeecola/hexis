@@ -76,6 +76,9 @@ active_block_rotation:
 random_word:
     .word 0xfa28e0b1
 
+available_blocks:
+    .byte 1,1,1,1,1,1,1
+
 .align 2
 hexis_grid:
     .fill 22*10,1,2                    @Each byte is a grit pallete to be draw
