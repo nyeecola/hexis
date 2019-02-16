@@ -46,9 +46,18 @@ fill_block:
 
 .thumb_func
 .type did_hit_something, %function
-@parameters: x_offset y_offset
+@parameters: x_offset y_offset collision_flag next_frame_flag
+@ collision_flag should be one of the following:
+@ - 0b001 for down
+@ - 0b010 for left
+@ - 0b100 for right
+@ - 0b111 for all
+@ next_frame_flag should be 1 if you want to check in releation to the next frame position 
 did_hit_something:
     push {r1-r7, lr}
+
+    mov r9, r2                      @ store collision flag temporarily (we cant push it :()
+    mov r10, r3                     @ store netx_frame_flag temporarily too
 
     mov r2, r0                      @ x_offset
     mov r7, r1                      @ y_offset
@@ -74,30 +83,56 @@ did_hit_something:
     add r4, r2
     pop {r0-r2}
 
-    mov r6, #0                      @ X offset
+    mov r6, #0                      @ X offset (to avoid using double loop)
     mov r5, #0                      @ loop index
 collision_loop:
     ldrb r3, [r4, r5]               @ loads which color to draw (color index in palette)
     add r5, #1
+
     cmp r3, #2
     beq skip_hit_test
     add r0, r6
 
+
     push {r0-r7}
-    cmp r7, #0                      @ if falling
+    mov r3, r9
+    mov r6, r10
+
+    mov r4, #0b001
+    tst r3, r4                      @ if falling
     beq skip_ground_check
+    cmp r6, #0
+    bne next_frame_ground_check
+    mov r5, #1
+    cmn r1, r5
+    beq did_hit
+    b skip_ground_check
+next_frame_ground_check:
     cmp r1, #0
     beq did_hit
 skip_ground_check:
-    cmp r2, #1
-    bne skip_right_check
+    mov r4, #0b100
+    tst r3, r4
+    beq skip_right_check
+    cmp r6, #0
+    bne next_frame_right_check
+    cmp r0, #10
+    beq did_hit
+    b skip_right_check
+next_frame_right_check:
     cmp r0, #9
     beq did_hit
 skip_right_check:
-    mov r6, #1
-    neg r6, r6
-    cmp r2, r6
-    bne skip_left_check
+    mov r4, #0b010
+    tst r3, r4
+    beq skip_left_check
+    cmp r6, #0
+    bne next_frame_left_check
+    mov r5, #1
+    cmn r0, r5
+    beq did_hit
+    b skip_left_check
+next_frame_left_check:
     cmp r0, #0
     beq did_hit
 skip_left_check:
@@ -238,13 +273,15 @@ do_game_cycle:
     ldrsb r2, [r0,r3]               @ X pos
     ldr r3, =hexis_grid
 
-    push {r0, r1}
+    push {r0-r3}
     mov r0, #0
     mov r1, #1
     neg r1, r1
+    mov r2, #0b1
+    mov r3, #1
     bl did_hit_something
     cmp r0, #0
-    pop {r0, r1}
+    pop {r0-r3}
     bne skip_gravity
 
     sub r1, #1                      @remove 1 from Y pos
@@ -304,3 +341,5 @@ end_byte_loop:
     blt line_loop
 end_cycle:
     pop {r0-r5, pc}
+
+.ltorg

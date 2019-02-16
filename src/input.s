@@ -28,12 +28,14 @@ input.right:
     beq input.left
     @ handle right pressed here
 
-    push {r0, r1}
+    push {r0-r3}
     mov r0, #1
     mov r1, #0
+    mov r2, #0b100
+    mov r3, #1
     bl did_hit_something
     cmp r0, #1
-    pop {r0, r1}
+    pop {r0-r3}
     beq input.left
 
     ldr r2, =active_block_position
@@ -51,13 +53,15 @@ input.left:
     beq input.up
     @ handle left pressed here
 
-    push {r0, r1}
+    push {r0-r3}
     mov r0, #1
     neg r0, r0
     mov r1, #0
+    mov r2, #0b010
+    mov r3, #1
     bl did_hit_something
     cmp r0, #1
-    pop {r0, r1}
+    pop {r0-r3}
     beq input.up
 
     ldr r2, =active_block_position
@@ -93,28 +97,37 @@ input.a:
     beq input.end
     @ handle A pressed here
 
-    ldr r5, =active_block_position
-    mov r4, #1
-    ldrsb r2, [r5,r4]               @ Loads X
-
-    cmp r2, #0
-    bge skip_adding_padding
-    mov r2, #0
-skip_adding_padding:
-    cmp r2, #7
-    blt skip_subbing_padding
-    mov r2, #6
-skip_subbing_padding:
-    strb r2, [r5,r4]
 
     ldr r2, =active_block_rotation
     ldrb r4, [r2]
+    mov r8, r4                              @ store old rotation temporarily
     add r4, #1
     cmp r4, #4
-    bne skip_rotation_reset
+    bne skip_rotation_index_reset
     mov r4, #0
-skip_rotation_reset:
+skip_rotation_index_reset:
     strb r4, [r2]
+
+    
+    push {r0-r3}
+
+    push {r2}
+
+    mov r0, #0
+    mov r1, #0
+    mov r2, #0b111
+    mov r3, #0
+    bl did_hit_something
+
+    pop {r2}
+
+    cmp r0, #0
+    beq skip_rotation_reset    
+    mov r0, r8
+    strb r0, [r2]
+skip_rotation_reset:
+
+    pop {r0-r3}
 
     @TODO: create a separate timer for rotation, probably not enought registers (use RAM)
     mov input_timer, #ROTATION_DELAY   @Valid input increases the input delay timer
