@@ -2,7 +2,7 @@ all: gfx
 	mkdir -p bin
 	/opt/devkitpro/devkitARM/bin/arm-none-eabi-gcc -mthumb-interwork -specs=gba.specs src/main.s -o bin/main.o -g
 	/opt/devkitpro/devkitARM/bin/arm-none-eabi-objcopy -v -O binary bin/main.o main.gba
-	/opt/devkitpro/tools/bin/gbafix main.gba
+	/opt/devkitpro/tools/bin/gbafix main.gba -tHexis -cTIHE -mTI -r1.0
 
 gfx: force
 	mkdir -p bin
