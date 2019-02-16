@@ -181,6 +181,13 @@ fix_to_grid:
     ldrsb r0, [r2,r3]               @ Loads X
     mov r3, #0
     ldrsb r1, [r2,r3]               @ Loads Y
+    cmp r1, #19
+    blt skip_reset_game
+    mov r0, r12
+    mov sp, r0
+    b reset_game
+skip_reset_game:
+
 
     push {r0-r2}
     ldr r4, =hexis_array
@@ -225,7 +232,7 @@ fix_skip_x_reset:
     cmp r5, #16
     bne fix_block_loop
 
-    ldrh r1, =0x0516
+    ldrh r1, =0x0416
     strh r1, [r2]                   @ reset active block position
 
     bl generate_random_type

@@ -24,6 +24,9 @@ timer .req r7
 .global main
 .type main, %function
 main:
+    mov r0, sp                     @Store beginning of stack
+    mov r12, r0
+
     mov r0, #0x4                    @Display Controller reg
     lsl r0, #24
     mov r1, #0b1000101              @Mode 0 + BG0 enabled + OBJ enabled + 1D OBJ mapping
@@ -32,13 +35,19 @@ main:
 
     bl enable_vblank_interrupt
 
+
+reset_game:
+    ldr r0, =hexis_grid_zeroed
+    ldr r1, =hexis_grid
+    mov r2, #55
+    bl dma3_copy
     bl title_main
     b game_main
 
 .section .iwram
 .align 2
 active_block_position:
-    .hword 0x0516                      @ first byte is Y, second byte is X
+    .hword 0x0416                      @ first byte is Y, second byte is X
 active_block_type:
     .byte 2
 active_block_rotation:
@@ -52,6 +61,10 @@ available_blocks:
 
 .align 2
 hexis_grid:
+    .fill 22*10,1,2                    @Each byte is a grit pallete to be draw
+
+.align 2
+hexis_grid_zeroed:
     .fill 22*10,1,2                    @Each byte is a grit pallete to be draw
 
 
