@@ -8,8 +8,11 @@ timer .req r7
 .include "src/input.s"
 .include "src/draw.s"
 .include "src/prng.s"
+.include "src/game-main.s"
+.include "src/title-main.s"
 
 .include "src/bg0.s"
+.include "src/title.s"
 
 .set INPUT_DELAY, 4
 .set ROTATION_DELAY, 14
@@ -27,42 +30,10 @@ main:
     lsl r1, #6
     strh r1, [r0]
 
-    mov r0, #0x4                    @Setting up BG0 with:
-    lsl r0, #24
-    add r0, #8
-    mov r1, #0b1                    @Priority = 0; TileBase = 0; Mosaic = false; palette = 16/16; MapBase = 4; Size = 256x256
-    lsl r1, #10
-    strh r1, [r0]
-
     bl enable_vblank_interrupt
 
-    copy_256x256_bg bg0 10*8 0 4
-
-    mov timer, #0
-    mov input_timer, #0
-
-forever:
-    mov r3, #FALLING_DELAY
-
-    @ read input
-    bl input_handling
-
-    @ gravity
-    add timer, #1
-    cmp timer, r3                   @ When game timer reaches current maximum
-    blt end_timer_handler           @ Handle a gravity frame, else skips it
-    bl do_game_cycle
-end_timer_handler:
-
-    swi 0x5                         @Asks BIOS to wait for VBlank
-
-    @ draw grid
-    bl draw_grid
-
-    @ draw active block
-    bl draw_active_block
-
-    b forever
+    bl title_main
+    b game_main
 
 .section .iwram
 .align 2

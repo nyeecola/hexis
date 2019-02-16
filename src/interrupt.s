@@ -50,3 +50,4 @@ enable_vblank_interrupt:
 
     pop { r0, r1 }
     bx lr
+.ltorg

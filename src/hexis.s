@@ -193,7 +193,15 @@ fix_skip_x_reset:
     ldrh r1, =0x0516
     strh r1, [r2]                   @ reset active block position
 
+    bl generate_random_type
+
+    pop {r0-r7, pc}
+
+.thumb_func
+.type generate_random_type, %function
 generate_random_type:
+    push {r0-r2, lr}
+
     bl check_available_blocks
     ldr r2, =available_blocks
 
@@ -215,8 +223,7 @@ skip_random_hack:
     ldr r1, =active_block_type
     strb r0, [r1]
 
-    pop {r0-r7, pc}
-
+    pop {r0-r2, pc}
 
 .thumb_func
 .type do_game_cycle, %function
