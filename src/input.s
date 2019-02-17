@@ -87,7 +87,7 @@ input.down:
     beq input.a
     @ handle down pressed here
 
-    mov r3, #2                      @Cuts down game timer, making blocks fall faster
+    mov r3, #SOFTDROP_DELAY         @Cuts down game timer, making blocks fall faster
     @ purposefully not adding input delay
 
 input.a:

@@ -13,10 +13,12 @@ timer .req r7
 
 .include "src/bg0.s"
 .include "src/title.s"
+.include "src/hud.s"
 
 .set INPUT_DELAY, 4
 .set ROTATION_DELAY, 14
 .set FALLING_DELAY, 30
+.set SOFTDROP_DELAY, 2
 
 .text
 .align 2
@@ -29,7 +31,7 @@ main:
 
     mov r0, #0x4                    @Display Controller reg
     lsl r0, #24
-    mov r1, #0b1000101              @Mode 0 + BG0 enabled + OBJ enabled + 1D OBJ mapping
+    mov r1, #0b1001101              @Mode 0 + BG0 enabled + BG1 enabled + OBJ enabled + 1D OBJ mapping
     lsl r1, #6
     strh r1, [r0]
 
@@ -41,6 +43,11 @@ reset_game:
     ldr r1, =hexis_grid
     mov r2, #55
     bl dma3_copy
+
+    ldr r0, =lines_cleared
+    mov r1, #0
+    str r1, [r0]
+
     bl title_main
     b game_main
 
@@ -55,6 +62,9 @@ active_block_rotation:
 
 random_word:
     .word 0xfa28e0b1
+
+lines_cleared:
+    .word 0x0
 
 available_blocks:
     .byte 1,1,1,1,1,1,1

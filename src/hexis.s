@@ -52,7 +52,7 @@ fill_block:
 @ - 0b010 for left
 @ - 0b100 for right
 @ - 0b111 for all
-@ next_frame_flag should be 1 if you want to check in releation to the next frame position 
+@ next_frame_flag should be 1 if you want to check in releation to the next frame position
 did_hit_something:
     push {r1-r7, lr}
 
@@ -181,7 +181,7 @@ fix_to_grid:
     ldrsb r0, [r2,r3]               @ Loads X
     mov r3, #0
     ldrsb r1, [r2,r3]               @ Loads Y
-    cmp r1, #19
+    cmp r1, #21
     blt skip_reset_game
     mov r0, r12
     mov sp, r0
@@ -346,6 +346,12 @@ end_byte_loop:
     add r4, #10                     @ Goes to the next line
     cmp r4, r0                      @ Unless it has reached the end of the grid
     blt line_loop
+
+    ldr r0, =lines_cleared
+    ldr r2, [r0]
+    add r1, r2
+    str r1, [r0]
+
 end_cycle:
     pop {r0-r5, pc}
 
