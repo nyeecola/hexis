@@ -314,8 +314,12 @@ byte_loop:
     beq drop_line                   @   as it cannot be cleared
     cmp r5, #10                     @ if in end of line
     bne byte_loop
+
+    mov r5, r4
+    bl clear_animation
     add r1, #1                      @ this line has no black, so it should be cleared
-    b   end_byte_loop
+
+    b end_byte_loop
 
 drop_line:
     mov r5, #10

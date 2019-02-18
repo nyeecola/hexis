@@ -85,3 +85,45 @@ skip_x_reset:
     bne block_drawing_loop
 
     pop {r0-r6, pc}
+
+.thumb_func
+.type clear_animation, %function
+clear_animation:
+    @ r5 -> destination line
+    push {r0-r4, lr}
+
+    mov r0, #1
+    mov r1, r5
+    mov r2, r5
+
+    add r1, #4
+    add r2, #5
+
+    mov r3, #2
+clear_animation_loop:
+    mov r4, #0
+    add r4, r1
+    add r4, r0
+    strb r3, [r4]
+
+    mov r4, #0
+    add r4, r2
+    sub r4, r0
+    strb r3, [r4]
+
+    push {r0-r4}
+    swi 0x5
+    swi 0x5
+    pop {r0-r4}
+
+    @ draw grid
+    bl draw_grid
+
+    @ draw active block
+    bl draw_active_block
+
+    add r0, #1
+    cmp r0, #5
+    ble clear_animation_loop
+
+    pop {r0-r4, pc}

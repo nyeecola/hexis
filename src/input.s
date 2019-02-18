@@ -94,21 +94,19 @@ input.a:
     mov r1, #1
     and r1, r0                      @If "A" bit is set
     cmp r1, #0
-    beq input.end
+    beq input.b
     @ handle A pressed here
-
 
     ldr r2, =active_block_rotation
     ldrb r4, [r2]
     mov r8, r4                              @ store old rotation temporarily
     add r4, #1
     cmp r4, #4
-    bne skip_rotation_index_reset
+    bne skip_a_rotation_index_reset
     mov r4, #0
-skip_rotation_index_reset:
+skip_a_rotation_index_reset:
     strb r4, [r2]
 
-    
     push {r0-r3}
 
     push {r2}
@@ -122,10 +120,50 @@ skip_rotation_index_reset:
     pop {r2}
 
     cmp r0, #0
-    beq skip_rotation_reset    
+    beq skip_a_rotation_reset
     mov r0, r8
     strb r0, [r2]
-skip_rotation_reset:
+skip_a_rotation_reset:
+
+    pop {r0-r3}
+
+    @TODO: create a separate timer for rotation, probably not enought registers (use RAM)
+    mov input_timer, #ROTATION_DELAY   @Valid input increases the input delay timer
+
+input.b:
+    mov r1, #10
+    and r1, r0                      @If "B" bit is set
+    cmp r1, #0
+    beq input.end
+    @ handle B pressed here
+
+    ldr r2, =active_block_rotation
+    ldrb r4, [r2]
+    mov r8, r4                              @ store old rotation temporarily
+    cmp r4, #0
+    bne skip_b_rotation_index_reset
+    mov r4, #4
+skip_b_rotation_index_reset:
+    sub r4, #1
+    strb r4, [r2]
+
+    push {r0-r3}
+
+    push {r2}
+
+    mov r0, #0
+    mov r1, #0
+    mov r2, #0b111
+    mov r3, #0
+    bl did_hit_something
+
+    pop {r2}
+
+    cmp r0, #0
+    beq skip_b_rotation_reset
+    mov r0, r8
+    strb r0, [r2]
+skip_b_rotation_reset:
 
     pop {r0-r3}
 
