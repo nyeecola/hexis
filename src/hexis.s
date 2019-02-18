@@ -351,10 +351,56 @@ end_byte_loop:
     cmp r4, r0                      @ Unless it has reached the end of the grid
     blt line_loop
 
+    cmp r1, #0
+    beq end_cycle
+
+    mov r3, r1
+
     ldr r0, =lines_cleared
     ldr r2, [r0]
     add r1, r2
     str r1, [r0]
+
+    lsr r1, #3                     @Gets current level from lines_cleared
+    add r1, #1
+    lsl r1, r3                     @Shifts level to get the score
+
+    ldr r0, =score
+    ldr r2, [r0]
+    add r2, r1
+    str r2, [r0]
+
+    ldr r0, =HIGH_SCORE
+    ldrb r3, [r0, #1]
+    lsl r3, #8
+    ldrb r1, [r0, #2]
+    orr r3, r1
+    lsl r3, #8
+    ldrb r1, [r0, #3]
+    orr r3, r1
+    lsl r3, #8
+    ldrb r1, [r0, #4]
+    orr r3, r1
+
+    cmp r2, r3
+    bls end_cycle
+    
+    mov r4, #0xFF
+    mov r3, r2
+    and r3, r4
+    strb r3, [r0, #4]
+    lsr r2, #8
+    mov r3, r2
+    and r3, r4
+    strb r3, [r0, #3]
+    lsr r2, #8
+    mov r3, r2
+    and r3, r4
+    strb r3, [r0, #2]
+    lsr r2, #8
+    mov r3, r2
+    and r3, r4
+    strb r3, [r0, #1]
 
 end_cycle:
     pop {r0-r5, pc}

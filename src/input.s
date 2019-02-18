@@ -173,3 +173,4 @@ skip_b_rotation_reset:
 input.end:
     pop {r0-r2, r4, r5, pc}
 
+.ltorg

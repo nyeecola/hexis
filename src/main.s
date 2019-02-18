@@ -19,6 +19,7 @@ timer .req r7
 .set ROTATION_DELAY, 14
 .set FALLING_DELAY, 30
 .set SOFTDROP_DELAY, 2
+.set HIGH_SCORE, 0x0E000000
 
 .text
 .align 2
@@ -26,7 +27,7 @@ timer .req r7
 .global main
 .type main, %function
 main:
-    mov r0, sp                     @Store beginning of stack
+    mov r0, sp                      @Store beginning of stack
     mov r12, r0
 
     mov r0, #0x4                    @Display Controller reg
@@ -37,6 +38,18 @@ main:
 
     bl enable_vblank_interrupt
 
+    ldr r0, =HIGH_SCORE
+    ldrb r1, [r0]
+    cmp r1, #0xBB
+    beq reset_game
+reset_save:
+    mov r1, #0xBB
+    strb r1, [r0]
+    mov r1, #0
+    strb r1, [r0, #1]
+    strb r1, [r0, #2]
+    strb r1, [r0, #3]
+    strb r1, [r0, #4]
 
 reset_game:
     ldr r0, =hexis_grid_zeroed
@@ -46,6 +59,9 @@ reset_game:
 
     ldr r0, =lines_cleared
     mov r1, #0
+    str r1, [r0]
+
+    ldr r0, =score
     str r1, [r0]
 
     bl title_main
@@ -64,6 +80,9 @@ random_word:
     .word 0xfa28e0b1
 
 lines_cleared:
+    .word 0x0
+
+score:
     .word 0x0
 
 available_blocks:

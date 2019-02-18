@@ -85,6 +85,7 @@ skip_x_reset:
     bne block_drawing_loop
 
     pop {r0-r6, pc}
+.ltorg
 
 .thumb_func
 .type clear_animation, %function
