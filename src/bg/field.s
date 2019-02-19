@@ -1,9 +1,9 @@
 
-@{{BLOCK(bg0)
+@{{BLOCK(field)
 
 @=======================================================================
 @
-@	bg0, 256x256@4,
+@	field, 256x256@4,
 @	Transparent color : FF,00,FF
 @	+ palette 16 entries, not compressed
 @	+ 4 tiles (t|f|p reduced) not compressed
@@ -18,9 +18,9 @@
 
 	.section .rodata
 	.align	2
-	.global bg0Tiles		@ 96 unsigned chars
-	.hidden bg0Tiles
-bg0Tiles:
+	.global fieldTiles		@ 96 unsigned chars
+	.hidden fieldTiles
+fieldTiles:
 	.word 0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000
 	.word 0x11111111,0x11111111,0x11111111,0x11111111,0x11111111,0x11111111,0x11111111,0x11111111
 	.word 0x22222222,0x22222222,0x22222222,0x22222222,0x22222222,0x22222222,0x22222222,0x22222222
@@ -28,9 +28,9 @@ bg0Tiles:
 
 	.section .rodata
 	.align	2
-	.global bg0Map		@ 2048 unsigned chars
-	.hidden bg0Map
-bg0Map:
+	.global fieldMap		@ 2048 unsigned chars
+	.hidden fieldMap
+fieldMap:
 	.hword 0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0002,0x0002
 	.hword 0x0002,0x0002,0x0002,0x0002,0x0002,0x0002,0x0002,0x0002
 	.hword 0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001
@@ -177,9 +177,9 @@ bg0Map:
 
 	.section .rodata
 	.align	2
-	.global bg0Pal		@ 32 unsigned chars
-	.hidden bg0Pal
-bg0Pal:
+	.global fieldPal		@ 32 unsigned chars
+	.hidden fieldPal
+fieldPal:
 @	.hword 0x7C1F,0x75B2,0x0000,0x001F,0x7C00,0x03E0,0x7C1F,0x03FF
 @	.hword 0x7FE0,0x029F,0x77BD,0x4E73,0x0000,0x0000,0x0000,0x0000
 
@@ -207,4 +207,4 @@ bg0Pal:
 	.hword 0x7C1F,0x0000,0x029F,0x333F,0x021B,0x0000,0x0000,0x0000
 	.hword 0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000
 
-@}}BLOCK(bg0)
+@}}BLOCK(field)

@@ -131,7 +131,7 @@ skip_a_rotation_reset:
     mov input_timer, #ROTATION_DELAY   @Valid input increases the input delay timer
 
 input.b:
-    mov r1, #10
+    mov r1, #0b10
     and r1, r0                      @If "B" bit is set
     cmp r1, #0
     beq input.end

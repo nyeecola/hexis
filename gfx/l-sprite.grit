@@ -2,7 +2,7 @@
 -pn16
 -ps0
 -gB4 # Bit depth of the output
--gTFF00FF
+-gTaeff00
 #metatile
--Mh8 # Metatile height
--Mw8 # Metatile width
+-Mh4 # Metatile height
+-Mw4 # Metatile width

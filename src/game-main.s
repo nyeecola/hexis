@@ -14,7 +14,7 @@ game_main:
     strh r1, [r0]
 
     copy_256x256_bg hud 49 1 10 9
-    copy_256x256_bg bg0 4 0 4 8
+    copy_256x256_bg field 4 0 4 8
 
     mov timer, #0
     mov input_timer, #0

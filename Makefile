@@ -6,8 +6,8 @@ all: gfx
 
 gfx: force
 	mkdir -p bin
-	grit gfx/obj0.png -o bin/obj0
-	rm bin/*.h
+	#grit gfx/obj0.png -o bin/obj0
+	#rm bin/*.h
 
 clean:
 	rm -rf bin main.gba main.sav
