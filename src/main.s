@@ -120,25 +120,25 @@ hexis_array:
     .byte 2,2,2,2
 
 
-    .byte 2,4,2,2
-    .byte 2,4,2,2
-    .byte 2,4,2,2
-    .byte 2,4,2,2
-
     .byte 2,2,2,2
     .byte 4,4,4,4
     .byte 2,2,2,2
     .byte 2,2,2,2
 
-    .byte 2,4,2,2
-    .byte 2,4,2,2
-    .byte 2,4,2,2
-    .byte 2,4,2,2
+    .byte 2,2,4,2
+    .byte 2,2,4,2
+    .byte 2,2,4,2
+    .byte 2,2,4,2
 
+    .byte 2,2,2,2
     .byte 2,2,2,2
     .byte 4,4,4,4
     .byte 2,2,2,2
-    .byte 2,2,2,2
+
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+    .byte 2,4,2,2
+    .byte 2,4,2,2
 
 
     .byte 2,5,2,2
@@ -162,6 +162,11 @@ hexis_array:
     .byte 2,2,2,2
 
 
+    .byte 2,2,6,2
+    .byte 6,6,6,2
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
     .byte 2,6,2,2
     .byte 2,6,2,2
     .byte 2,6,6,2
@@ -175,11 +180,6 @@ hexis_array:
     .byte 6,6,2,2
     .byte 2,6,2,2
     .byte 2,6,2,2
-    .byte 2,2,2,2
-
-    .byte 2,2,6,2
-    .byte 6,6,6,2
-    .byte 2,2,2,2
     .byte 2,2,2,2
 
 
@@ -204,43 +204,43 @@ hexis_array:
     .byte 2,2,2,2
 
 
+    .byte 2,8,8,2
+    .byte 8,8,2,2
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
+    .byte 2,8,2,2
+    .byte 2,8,8,2
+    .byte 2,2,8,2
+    .byte 2,2,2,2
+
     .byte 2,2,2,2
     .byte 2,8,8,2
     .byte 8,8,2,2
     .byte 2,2,2,2
 
-    .byte 2,2,2,2
     .byte 8,2,2,2
     .byte 8,8,2,2
     .byte 2,8,2,2
-
-    .byte 2,2,2,2
-    .byte 2,8,8,2
-    .byte 8,8,2,2
     .byte 2,2,2,2
 
-    .byte 2,2,2,2
-    .byte 8,2,2,2
-    .byte 8,8,2,2
-    .byte 2,8,2,2
 
+    .byte 9,9,2,2
+    .byte 2,9,9,2
+    .byte 2,2,2,2
+    .byte 2,2,2,2
+
+    .byte 2,2,9,2
+    .byte 2,9,9,2
+    .byte 2,9,2,2
+    .byte 2,2,2,2
 
     .byte 2,2,2,2
     .byte 9,9,2,2
     .byte 2,9,9,2
     .byte 2,2,2,2
 
-    .byte 2,2,2,2
     .byte 2,9,2,2
     .byte 9,9,2,2
     .byte 9,2,2,2
-
     .byte 2,2,2,2
-    .byte 9,9,2,2
-    .byte 2,9,9,2
-    .byte 2,2,2,2
-
-    .byte 2,2,2,2
-    .byte 2,9,2,2
-    .byte 9,9,2,2
-    .byte 9,2,2,2

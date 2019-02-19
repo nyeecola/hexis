@@ -187,8 +187,6 @@ fix_to_grid:
     mov sp, r0
     b reset_game
 skip_reset_game:
-
-
     push {r0-r2}
     ldr r4, =hexis_array
     ldr r1, =active_block_type
@@ -231,6 +229,17 @@ fix_skip_x_reset:
 
     cmp r5, #16
     bne fix_block_loop
+
+    swi 0x5
+    swi 0x5
+    swi 0x5
+    swi 0x5
+    swi 0x5
+    swi 0x5
+    swi 0x5
+    swi 0x5
+    swi 0x5
+    swi 0x5
 
     ldrh r1, =0x0416
     strh r1, [r2]                   @ reset active block position
@@ -384,7 +393,7 @@ end_byte_loop:
 
     cmp r2, r3
     bls end_cycle
-    
+
     mov r4, #0xFF
     mov r3, r2
     and r3, r4
