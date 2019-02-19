@@ -54,7 +54,7 @@ reset_save:
 reset_game:
     ldr r0, =hexis_grid_zeroed
     ldr r1, =hexis_grid
-    mov r2, #55
+    mov r2, #61
     bl dma3_copy
 
     ldr r0, =lines_cleared
@@ -90,11 +90,11 @@ available_blocks:
 
 .align 2
 hexis_grid:
-    .fill 22*10,1,2                    @Each byte is a grit pallete to be draw
+    .fill 25*10,1,2                    @Each byte is a grit pallete to be draw
 
 .align 2
 hexis_grid_zeroed:
-    .fill 22*10,1,2                    @Each byte is a grit pallete to be draw
+    .fill 25*10,1,2                    @Each byte is a grit pallete to be draw
 
 
 .align 2

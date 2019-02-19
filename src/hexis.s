@@ -311,7 +311,7 @@ skip_gravity:
 
     ldr r0, =hexis_grid
     mov r4, r0                      @ Y (line address)
-    add r0, #200                    @ Max address
+    add r0, #250                    @ Max address
     mov r1, #0                      @ keeps count of lines cleared
 
 line_loop:
