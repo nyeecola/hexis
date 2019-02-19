@@ -65,3 +65,5 @@ available_blocks_reset:
 skip_available_blocks_reset:
     pop {r0-r1}
     bx lr
+
+.ltorg

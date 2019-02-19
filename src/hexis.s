@@ -185,7 +185,8 @@ fix_to_grid:
     blt skip_reset_game
     mov r0, r12
     mov sp, r0
-    b reset_game
+    ldr r1, =reset_game
+    bx r1
 skip_reset_game:
     push {r0-r2}
     ldr r4, =hexis_array

@@ -16,6 +16,48 @@ game_main:
     copy_256x256_bg hud 49 1 10 9
     copy_256x256_bg field 4 0 4 8
 
+    copy_32x32_sprite t_sprite 1 0
+    copy_32x32_sprite t_sprite 41 1
+    copy_32x32_sprite l_sprite 81 2
+    copy_32x32_sprite t_sprite 121 3
+    copy_32x32_sprite j_sprite 161 4
+
+    mov r0, #16                     @ X
+    mov r1, #8                      @ Y
+    mov r2, #0                      @ Shape = Square
+    mov r3, #2                      @ Size = 32x32
+    mov r4, #1                      @ Tile base
+    mov r5, #0                      @ Palette number
+    bl sprite.create
+    mov r0, #16                     @ X
+    mov r1, #54                     @ Y
+    mov r2, #0                      @ Shape = Square
+    mov r3, #2                      @ Size = 32x32
+    mov r4, #41                     @ Tile base
+    mov r5, #1                      @ Palette number
+    bl sprite.create
+    mov r0, #16                     @ X
+    mov r1, #76                     @ Y
+    mov r2, #0                      @ Shape = Square
+    mov r3, #2                      @ Size = 32x32
+    mov r4, #81                     @ Tile base
+    mov r5, #2                      @ Palette number
+    bl sprite.create
+    mov r0, #16                     @ X
+    mov r1, #98                     @ Y
+    mov r2, #0                      @ Shape = Square
+    mov r3, #2                      @ Size = 32x32
+    mov r4, #121                    @ Tile base
+    mov r5, #3                      @ Palette number
+    bl sprite.create
+    mov r0, #16                     @ X
+    mov r1, #120                    @ Y
+    mov r2, #0                      @ Shape = Square
+    mov r3, #2                      @ Size = 32x32
+    mov r4, #161                    @ Tile base
+    mov r5, #4                      @ Palette number
+    bl sprite.create
+
     mov timer, #0
     mov input_timer, #0
 
@@ -53,6 +95,8 @@ end_timer_handler:
     bl draw_active_block
 
     b game_loop
+
+.ltorg
 
 .thumb_func
 .type update_lines_cleared_counter, %function

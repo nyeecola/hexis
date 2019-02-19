@@ -8,12 +8,21 @@ timer .req r7
 .include "src/input.s"
 .include "src/draw.s"
 .include "src/prng.s"
+.include "src/sprite.s"
 .include "src/game-main.s"
 .include "src/title-main.s"
 
 .include "src/bg/field.s"
 .include "src/bg/title.s"
 .include "src/bg/hud.s"
+
+.include "src/obj/i_sprite.s"
+.include "src/obj/j_sprite.s"
+.include "src/obj/l_sprite.s"
+.include "src/obj/s_sprite.s"
+.include "src/obj/z_sprite.s"
+.include "src/obj/o_sprite.s"
+.include "src/obj/t_sprite.s"
 
 .set INPUT_DELAY, 4
 .set ROTATION_DELAY, 14

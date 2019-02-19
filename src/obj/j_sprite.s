@@ -6,10 +6,10 @@
 @	j_sprite, 32x32@4, 
 @	Transparent color : FF,00,FF
 @	+ palette 16 entries, not compressed
-@	+ 16 tiles Metatiled by 4x4 not compressed
+@	+ 16 tiles not compressed
 @	Total size: 32 + 512 = 544
 @
-@	Time-stamp: 2019-02-19, 10:57:52
+@	Time-stamp: 2019-02-19, 17:55:25
 @	Exported by Cearn's GBA Image Transmogrifier, v0.8.15
 @	( http://www.coranac.com/projects/#grit )
 @

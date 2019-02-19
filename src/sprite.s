@@ -28,6 +28,37 @@
     pop { r0-r2 }
 .endm
 
+@ Copies GRIT generated data to vram
+.macro copy_32x32_sprite name tilebase palette
+    push { r0-r2 }
+
+    ldr r0, =\name\()Tiles
+    mov r1, #0x6
+    lsl r1, #8
+    add r1, #0x1                    @OBJ tile vram location
+    lsl r1, #16
+    mov r2, #\tilebase
+    lsl r2, #5                      @each tile base -> 32 bytes offset (size of a tile)
+    add r1, r2
+    mov r2, #1
+    lsl r2, #7                      @32x32 sprite is 4x4 tiles -> 16 tiles * 8 word per tile
+    bl dma3_copy
+
+    ldr r0, =\name\()Pal
+    mov r1, #0x5                    @OBJ palette pointer
+    lsl r1, #24
+    mov r2, #0x2
+    lsl r2, #8
+    add r1, r2                      @Copies colors to the first palette slot
+    mov r2, #\palette
+    lsl r2, #5
+    add r1, r2
+    mov r2, #8
+    bl dma3_copy
+
+    pop { r0-r2 }
+.endm
+
 @ r0 -> x
 @ r1 -> y
 @ r2 -> shape (0->square, 1->horizontal, 2->vertical)
@@ -41,6 +72,7 @@ sprite.create:
     push { r6, r7 }
 
     push { r0-r5 }
+
     ldr r2, =sprite_num
     ldr r2, [r2]
     lsl r2, #3              @Gets which position of the array to access
@@ -48,10 +80,6 @@ sprite.create:
     lsl r0, #8              @X to fixed point
     lsl r1, #8              @Y to fixed point
 
-    ldr r3, =sprites
-    add r3, r2              @Get new sprite memory position
-    str r0, [r3]
-    str r1, [r3, #4]        @Store X and Y to sprites array
     pop { r0-r5 }
 
     mov r7, #0xFF           @Truncates Y
@@ -59,9 +87,6 @@ sprite.create:
     mov r7, #0b11           @Truncates shape
     and r2, r7
     lsl r2, #14             @Shifts shape to correct bits
-    mov r7, #0b1            @Affine sprite with double size box
-    lsl r7, #8
-    orr r1, r7
     orr r1, r2              @OBJ attrib 0
 
     mov r7, #0x1
@@ -142,74 +167,9 @@ sprite.update:
     pop { r3, r4 }
     bx lr
 
-@ r0 -> id
-.align 2
-.thumb_func
-.type sprite.get_x, %function
-sprite.get_x:
-    push { r1 }
-
-    ldr r1, =sprites
-    lsl r0, #3
-    ldr r0, [r1, r0]        @Load X from array
-
-    pop { r1 }
-    bx lr
-
-@ r0 -> id
-@ r1 -> X
-.align 2
-.thumb_func
-.type sprite.set_x, %function
-sprite.set_x:
-    push { r2 }
-
-    ldr r2, =sprites
-    lsl r0, #3
-    str r1, [r2, r0]        @Saves X to array
-
-    pop { r2 }
-    bx lr
-
-@ r0 -> id
-.align 2
-.thumb_func
-.type sprite.get_y, %function
-sprite.get_y:
-    push { r1 }
-
-    ldr r1, =sprites
-    lsl r0, #3
-    add r0, #4
-    ldr r0, [r1, r0]        @Gets Y from array
-
-    pop { r1 }
-    bx lr
-
-@ r0 -> id
-@ r1 -> Y
-.align 2
-.thumb_func
-.type sprite.set_y, %function
-sprite.set_y:
-    push { r2 }
-
-    ldr r2, =sprites
-    lsl r0, #3
-    add r0, #4
-    str r1, [r2, r0]        @Save Y to array
-
-    pop { r2 }
-    bx lr
+.ltorg
 
 .section .iwram
 .align 2
 sprite_num:
     .word 0
-.section .iwram
-.align 2
-sprites:
-    .space 128*2
-    @Sprites: array of struct
-    @                    u32 (.8 fixed point) -> x
-    @                    u32 (.8 fixed point) -> y
