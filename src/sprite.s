@@ -59,13 +59,44 @@
     pop { r0-r2 }
 .endm
 
+@ Copies GRIT generated data to vram
+@ tilebase and palette must be register r3++
+.macro copy_32x32_sprite_reg name tilebase palette
+    push { r0-r2 }
+
+    ldr r0, =\name\()Tiles
+    mov r1, #0x6
+    lsl r1, #8
+    add r1, #0x1                    @OBJ tile vram location
+    lsl r1, #16
+    mov r2, \tilebase
+    lsl r2, #5                      @each tile base -> 32 bytes offset (size of a tile)
+    add r1, r2
+    mov r2, #1
+    lsl r2, #7                      @32x32 sprite is 4x4 tiles -> 16 tiles * 8 word per tile
+    bl dma3_copy
+
+    ldr r0, =\name\()Pal
+    mov r1, #0x5                    @OBJ palette pointer
+    lsl r1, #24
+    mov r2, #0x2
+    lsl r2, #8
+    add r1, r2                      @Copies colors to the first palette slot
+    mov r2, \palette
+    lsl r2, #5
+    add r1, r2
+    mov r2, #8
+    bl dma3_copy
+
+    pop { r0-r2 }
+.endm
+
 @ r0 -> x
 @ r1 -> y
 @ r2 -> shape (0->square, 1->horizontal, 2->vertical)
 @ r3 -> size  (0-3)
 @ r4 -> tile base
 @ r5 -> palette number
-.align 2
 .thumb_func
 .type sprite.create, %function
 sprite.create:
@@ -127,10 +158,69 @@ sprite.create:
     pop { r6, r7 }
     bx lr
 
+.thumb_func
+.type update_next_sprites, %function
+update_next_sprites:
+    push {r0-r5, lr}
+
+    ldr r0, =next_block_types
+    ldr r5, =update_next_sprites.loop
+    mov r3, #1
+    mov r4, #41
+
+update_next_sprites.loop:
+    mov r1, r3
+    sub r1, #1
+    ldrb r1, [r0, r1]
+
+    cmp r1, #0
+    bne update_next_sprites.switch1
+    copy_32x32_sprite_reg o_sprite r4 r3
+    b update_next_sprites.switchend
+update_next_sprites.switch1:
+    cmp r1, #1
+    bne update_next_sprites.switch2
+    copy_32x32_sprite_reg i_sprite r4 r3
+    b update_next_sprites.switchend
+update_next_sprites.switch2:
+    cmp r1, #2
+    bne update_next_sprites.switch3
+    copy_32x32_sprite_reg t_sprite r4 r3
+    b update_next_sprites.switchend
+update_next_sprites.switch3:
+    cmp r1, #3
+    bne update_next_sprites.switch4
+    copy_32x32_sprite_reg l_sprite r4 r3
+    b update_next_sprites.switchend
+update_next_sprites.switch4:
+    cmp r1, #4
+    bne update_next_sprites.switch5
+    copy_32x32_sprite_reg j_sprite r4 r3
+    b update_next_sprites.switchend
+update_next_sprites.switch5:
+    cmp r1, #5
+    bne update_next_sprites.switch6
+    copy_32x32_sprite_reg s_sprite r4 r3
+    b update_next_sprites.switchend
+update_next_sprites.switch6:
+    cmp r1, #6
+    bne update_next_sprites.switchend
+    copy_32x32_sprite_reg z_sprite r4 r3
+update_next_sprites.switchend:
+
+    add r3, #1
+    add r4, #40
+
+    cmp r3, #5
+    bge update_next_sprites.end
+    mov pc, r5
+
+update_next_sprites.end:
+    pop {r0-r5, pc}
+
 @ r0 -> X
 @ r1 -> Y
 @ r2 -> id
-.align 2
 .thumb_func
 .type sprite.update, %function
 sprite.update:

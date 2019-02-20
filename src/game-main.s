@@ -17,10 +17,6 @@ game_main:
     copy_256x256_bg field 4 0 4 8
 
     copy_32x32_sprite t_sprite 1 0
-    copy_32x32_sprite t_sprite 41 1
-    copy_32x32_sprite l_sprite 81 2
-    copy_32x32_sprite t_sprite 121 3
-    copy_32x32_sprite j_sprite 161 4
 
     mov r0, #16                     @ X
     mov r1, #8                      @ Y
