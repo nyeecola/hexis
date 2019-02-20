@@ -23,6 +23,7 @@ timer .req r7
 .include "src/obj/z_sprite.s"
 .include "src/obj/o_sprite.s"
 .include "src/obj/t_sprite.s"
+.include "src/obj/clear.s"
 
 .set INPUT_DELAY, 4
 .set ROTATION_DELAY, 14
@@ -61,6 +62,12 @@ reset_save:
     strb r1, [r0, #4]
 
 reset_game:
+    copy_32x32_sprite clear 1 0
+    copy_32x32_sprite clear 41 1
+    copy_32x32_sprite clear 81 2
+    copy_32x32_sprite clear 121 3
+    copy_32x32_sprite clear 161 4
+
     ldr r0, =hexis_grid_zeroed
     ldr r1, =hexis_grid
     mov r2, #61
