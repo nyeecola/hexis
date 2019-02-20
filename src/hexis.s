@@ -186,7 +186,7 @@ fix_to_grid:
     mov r0, r12
     mov sp, r0
     ldr r1, =reset_game
-    bx r1
+    mov pc, r1
 skip_reset_game:
     push {r0-r2}
     ldr r4, =hexis_array
@@ -245,14 +245,35 @@ fix_skip_x_reset:
     ldrh r1, =0x0416
     strh r1, [r2]                   @ reset active block position
 
+    ldr r0, =active_block_rotation
+    mov r1, #0
+    strb r1, [r0]
+
+    ldr r0, =active_block_type
+    ldr r1, =next_block_types
+
+    ldrb r2, [r1]
+    strb r2, [r0]
+
+    ldrb r3, [r1, #1]
+    strb r3, [r1]
+    ldrb r3, [r1, #2]
+    strb r3, [r1, #1]
+    ldrb r3, [r1, #3]
+    strb r3, [r1, #2]
+
     bl generate_random_type
+
+    strb r0, [r1, #3]
+
+    bl update_next_sprites
 
     pop {r0-r7, pc}
 
 .thumb_func
 .type generate_random_type, %function
 generate_random_type:
-    push {r0-r2, lr}
+    push {r1-r2, lr}
 
     bl check_available_blocks
     ldr r2, =available_blocks
@@ -272,10 +293,7 @@ skip_random_hack:
     mov r1, #0
     strb r1, [r2, r0]
 
-    ldr r1, =active_block_type
-    strb r0, [r1]
-
-    pop {r0-r2, pc}
+    pop {r1-r2, pc}
 
 .thumb_func
 .type do_game_cycle, %function

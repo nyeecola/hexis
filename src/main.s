@@ -97,6 +97,9 @@ score:
 available_blocks:
     .byte 1,1,1,1,1,1,1
 
+next_block_types:
+    .byte 0,0,0,0
+
 .align 2
 hexis_grid:
     .fill 25*10,1,2                    @Each byte is a grit pallete to be draw

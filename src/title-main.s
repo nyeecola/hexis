@@ -49,5 +49,20 @@ break_title_loop:
 
     bl generate_random_type
 
+    ldr r1, =active_block_type
+    strb r0, [r1]
+
+    ldr r1, =next_block_types
+    bl generate_random_type
+    strb r0, [r1]
+    bl generate_random_type
+    strb r0, [r1, #1]
+    bl generate_random_type
+    strb r0, [r1, #2]
+    bl generate_random_type
+    strb r0, [r1, #3]
+
+    bl update_next_sprites
+
     pop {pc}
 .ltorg
