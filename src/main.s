@@ -5,10 +5,10 @@ timer .req r7
 .include "src/dma.s"
 .include "src/background.s"
 .include "src/hexis.s"
-.include "src/input.s"
 .include "src/draw.s"
 .include "src/prng.s"
 .include "src/sprite.s"
+.include "src/input.s"
 .include "src/game-main.s"
 .include "src/title-main.s"
 
@@ -73,6 +73,13 @@ reset_game:
     ldr r0, =score
     str r1, [r0]
 
+    ldr r0, =hold_block_status
+    strb r1, [r0]
+
+    ldr r0, =hold_block_type
+    mov r1, #0xFF
+    strb r1, [r0]
+
     bl title_main
     b game_main
 
@@ -99,6 +106,13 @@ available_blocks:
 
 next_block_types:
     .byte 0,0,0,0
+
+hold_block_type:
+    .byte 0xFF
+
+hold_block_status:
+    .byte 0x00
+
 
 .align 2
 hexis_grid:

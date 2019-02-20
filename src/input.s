@@ -134,7 +134,7 @@ input.b:
     mov r1, #0b10
     and r1, r0                      @If "B" bit is set
     cmp r1, #0
-    beq input.end
+    beq input.lr
     @ handle B pressed here
 
     ldr r2, =active_block_rotation
@@ -169,6 +169,113 @@ skip_b_rotation_reset:
 
     @TODO: create a separate timer for rotation, probably not enought registers (use RAM)
     mov input_timer, #ROTATION_DELAY   @Valid input increases the input delay timer
+
+input.lr:
+    mov r1, #0b11
+    lsl r1, #8
+    and r1, r0                      @If "L" or "R" bit is set
+    cmp r1, #0
+    bne skip_input_exit1
+    ldr r1, =input.end
+    mov pc, r1
+skip_input_exit1:
+    @ handle L/R pressed here
+
+    ldr r1, =hold_block_status
+    ldrb r2, [r1]
+    cmp r2, #1
+    bne skip_input_exit2
+    ldr r1, =input.end
+    mov pc, r1
+skip_input_exit2:
+
+    mov r2, #1
+    strb r2, [r1]
+
+    ldr r2, =active_block_position
+    ldrh r1, =0x0416
+    strh r1, [r2]                   @ reset active block position
+
+    ldr r2, =active_block_rotation
+    mov r1, #0
+    strb r1, [r2]                   @ reset active block rotation
+
+    ldr r1, =active_block_type
+    ldr r2, =hold_block_type
+    ldrb r4, [r1]                   @ active block
+    ldrb r5, [r2]                   @ hold block
+
+    strb r4, [r2]                   @ update hold slot
+
+    cmp r4, #0
+    bne hold_update_next_sprites.switch1
+    copy_32x32_sprite o_sprite 1 0
+    b hold_update_next_sprites.switchend
+hold_update_next_sprites.switch1:
+    cmp r4, #1
+    bne hold_update_next_sprites.switch2
+    copy_32x32_sprite i_sprite 1 0
+    b hold_update_next_sprites.switchend
+hold_update_next_sprites.switch2:
+    cmp r4, #2
+    bne hold_update_next_sprites.switch3
+    copy_32x32_sprite t_sprite 1 0
+    b hold_update_next_sprites.switchend
+hold_update_next_sprites.switch3:
+    cmp r4, #3
+    bne hold_update_next_sprites.switch4
+    copy_32x32_sprite l_sprite 1 0
+    b hold_update_next_sprites.switchend
+hold_update_next_sprites.switch4:
+    cmp r4, #4
+    bne hold_update_next_sprites.switch5
+    copy_32x32_sprite j_sprite 1 0
+    b hold_update_next_sprites.switchend
+hold_update_next_sprites.switch5:
+    cmp r4, #5
+    bne hold_update_next_sprites.switch6
+    copy_32x32_sprite s_sprite 1 0
+    b hold_update_next_sprites.switchend
+hold_update_next_sprites.switch6:
+    cmp r4, #6
+    bne hold_update_next_sprites.switchend
+    copy_32x32_sprite z_sprite 1 0
+hold_update_next_sprites.switchend:
+    
+
+    cmp r5, #0xFF
+    beq hold_and_drop_next
+    strb r5, [r1]
+    b skip_hold_drop_next
+hold_and_drop_next:
+
+    push {r0}
+    ldr r0, =next_block_types
+
+    ldrb r2, [r0]
+    strb r2, [r1]
+
+    ldrb r3, [r0, #1]
+    strb r3, [r0]
+    ldrb r3, [r0, #2]
+    strb r3, [r0, #1]
+    ldrb r3, [r0, #3]
+    strb r3, [r0, #2]
+
+    bl generate_random_type
+
+    mov r1, r0
+    ldr r0, =next_block_types
+    strb r1, [r0, #3]
+    pop {r0}
+
+    bl update_next_sprites
+
+    strb r4, [r2]
+    
+skip_hold_drop_next:
+    
+    
 
 input.end:
     pop {r0-r2, r4, r5, pc}

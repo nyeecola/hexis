@@ -268,6 +268,10 @@ fix_skip_x_reset:
 
     bl update_next_sprites
 
+    ldr r0, =hold_block_status
+    mov r1, #0
+    strb r1, [r0]
+
     pop {r0-r7, pc}
 
 .thumb_func
