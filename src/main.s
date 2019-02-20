@@ -83,6 +83,9 @@ reset_game:
     ldr r0, =hold_block_status
     strb r1, [r0]
 
+    ldr r0, =sprite_num
+    str r1, [r0]
+
     ldr r0, =hold_block_type
     mov r1, #0xFF
     strb r1, [r0]
