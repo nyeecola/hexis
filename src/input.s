@@ -189,8 +189,16 @@ skip_input_exit1:
     mov pc, r1
 skip_input_exit2:
 
-    mov r2, #1
+    mov r2, #1                      @ update hold block status
     strb r2, [r1]
+
+    ldr r2, =0x7000004              @ location of OBJ 1 attrib 2
+    ldrh r5, [r2]
+    ldr r1, =0x0FFF
+    and r1, r5
+    ldr r4, =0x5000
+    orr r1, r4
+    strh r1, [r2]                   @ make hold icon gray
 
     ldr r2, =active_block_position
     ldrh r1, =0x0416

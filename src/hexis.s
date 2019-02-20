@@ -270,7 +270,13 @@ fix_skip_x_reset:
 
     ldr r0, =hold_block_status
     mov r1, #0
-    strb r1, [r0]
+    strb r1, [r0]                   @ reset hold block status
+
+    ldr r2, =0x7000004              @ location of OBJ 1 attrib 2
+    ldrh r5, [r2]
+    ldr r1, =0x0FFF
+    and r1, r5
+    strh r1, [r2]                   @ make hold icon colorful again
 
     pop {r0-r7, pc}
 

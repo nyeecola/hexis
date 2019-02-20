@@ -16,7 +16,7 @@ game_main:
     copy_256x256_bg hud 49 1 10 9
     copy_256x256_bg field 4 0 4 8
 
-    @copy_32x32_sprite t_sprite 1 0
+    copy_32x32_sprite clear 201 5
 
     mov r0, #16                     @ X
     mov r1, #8                      @ Y
