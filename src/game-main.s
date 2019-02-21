@@ -21,7 +21,7 @@ game_main:
 
     copy_256x256_bg paused 87 2 20 10
     copy_256x256_bg hud 49 1 10 9
-    copy_256x256_bg field 4 0 4 8
+    copy_256x256_bg field 6 0 4 8
 
     copy_32x32_sprite clear 201 5
 
