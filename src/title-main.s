@@ -10,7 +10,7 @@ title_main:
     ldr r1, =0b0000000010000100     @Priority = 0; TileBase = 1; Mosaic = false; palette = 256; MapBase = 0; Size = 256x256
     strh r1, [r0]
 
-    copy_256x256_bg_8bbp title 146 1 0 16
+    copy_256x256_bg_8bbp title 160 1 0 16
 
     mov r2, #0
 
