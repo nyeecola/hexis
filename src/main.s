@@ -15,6 +15,7 @@ timer .req r7
 .include "src/bg/field.s"
 .include "src/bg/title.s"
 .include "src/bg/hud.s"
+.include "src/bg/paused.s"
 
 .include "src/obj/i_sprite.s"
 .include "src/obj/j_sprite.s"
@@ -42,7 +43,7 @@ main:
 
     mov r0, #0x4                    @Display Controller reg
     lsl r0, #24
-    mov r1, #0b1001101              @Mode 0 + BG0 enabled + BG1 enabled + OBJ enabled + 1D OBJ mapping
+    mov r1, #0b1001101              @Mode 0 + BG0-1 enabled + OBJ enabled + 1D OBJ mapping
     lsl r1, #6
     strh r1, [r0]
 
@@ -123,6 +124,8 @@ hold_block_type:
 hold_block_status:
     .byte 0x00
 
+game_paused:
+    .byte 0
 
 .align 2
 hexis_grid:

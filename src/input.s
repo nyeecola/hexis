@@ -84,11 +84,44 @@ input.down:
     lsl r1, #7
     and r1, r0                      @If "down" bit is set
     cmp r1, #0
-    beq input.a
+    beq input.start_button
     @ handle down pressed here
 
     mov r3, #SOFTDROP_DELAY         @Cuts down game timer, making blocks fall faster
     @ purposefully not adding input delay
+
+input.start_button:
+    mov r1, #1
+    lsl r1, #3
+    and r1, r0                      @If "start" bit is set
+    cmp r1, #0
+    beq input.a
+    @ handle start pressed here
+
+    ldr r1, =game_paused
+    ldrb r2, [r1]
+    mvn r2, r2
+    strb r2, [r1]
+    ldrb r2, [r1]
+
+    cmp r2, #0
+    beq disable_pause_bg
+enable_pause_bg:
+    mov r2, #0x4                    @Display Controller reg
+    lsl r2, #24
+    mov r1, #0b1011101              @Mode 0 + BG0-2 enabled + OBJ enabled + 1D OBJ mapping
+    lsl r1, #6
+    strh r1, [r2]
+    b start_button_end
+disable_pause_bg:
+    mov r2, #0x4                    @Display Controller reg
+    lsl r2, #24
+    mov r1, #0b1001101              @Mode 0 + BG0-1 enabled + OBJ enabled + 1D OBJ mapping
+    lsl r1, #6
+    strh r1, [r2]
+start_button_end:
+
+    mov input_timer, #10*INPUT_DELAY
 
 input.a:
     mov r1, #1
@@ -249,7 +282,7 @@ hold_update_next_sprites.switch6:
     bne hold_update_next_sprites.switchend
     copy_32x32_sprite z_sprite 1 0
 hold_update_next_sprites.switchend:
-    
+
 
     cmp r5, #0xFF
     beq hold_and_drop_next
@@ -280,10 +313,8 @@ hold_and_drop_next:
     bl update_next_sprites
 
     strb r4, [r2]
-    
+
 skip_hold_drop_next:
-    
-    
 
 input.end:
     pop {r0-r2, r4, r5, pc}

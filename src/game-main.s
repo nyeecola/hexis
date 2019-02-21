@@ -4,15 +4,22 @@ game_main:
     mov r0, #0x4                    @Setting up BG0 with:
     lsl r0, #24
     add r0, #8
-    ldr r1, =0b0000010000000001     @Priority = 1; TileBase = 0; Mosaic = false; palette = 16/16; MapBase = 4; Size = 256x256
+    ldr r1, =0b0000010000000010     @Priority = 2; TileBase = 0; Mosaic = false; palette = 16/16; MapBase = 4; Size = 256x256
     strh r1, [r0]
 
     mov r0, #0x4                    @Setting up BG1 with:
     lsl r0, #24
     add r0, #0xA
-    ldr r1, =0b0000101000000100     @Priority = 0; TileBase = 1; Mosaic = false; Palette = 16/16; MapBase = 10; Size = 256x256
+    ldr r1, =0b0000101000000101     @Priority = 1; TileBase = 1; Mosaic = false; Palette = 16/16; MapBase = 10; Size = 256x256
     strh r1, [r0]
 
+    mov r0, #0x4                    @Setting up BG2 with:
+    lsl r0, #24
+    add r0, #0xC
+    ldr r1, =0b0001010000001000     @Priority = 0; TileBase = 2; Mosaic = false; Palette = 16/16; MapBase = 20; Size = 256x256
+    strh r1, [r0]
+
+    copy_256x256_bg paused 87 2 20 10
     copy_256x256_bg hud 49 1 10 9
     copy_256x256_bg field 4 0 4 8
 
@@ -55,7 +62,7 @@ game_main:
     bl sprite.create
 
     mov timer, #0
-    mov input_timer, #0
+    mov input_timer, #10*INPUT_DELAY
 
 game_loop:
     ldr r0, =lines_cleared          @Decreasses falling speed depending on lines_cleared
@@ -71,6 +78,14 @@ skip_delay_cap:
 
     @ read input
     bl input_handling
+
+    ldr r0, =game_paused
+    ldrb r0, [r0]
+    cmp r0, #0
+    beq continue_game
+    swi 0x5
+    b game_loop
+continue_game:
 
     @ gravity
     add timer, #1
