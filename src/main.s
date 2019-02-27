@@ -81,6 +81,9 @@ reset_game:
     ldr r0, =score
     str r1, [r0]
 
+    ldr r0, =clear_timer
+    str r1, [r0]
+
     ldr r0, =hold_block_status
     strb r1, [r0]
 
@@ -110,6 +113,12 @@ lines_cleared:
     .word 0x0
 
 score:
+    .word 0x0
+
+combo_count:
+    .word 0x0
+
+clear_timer:
     .word 0x0
 
 available_blocks:

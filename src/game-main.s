@@ -20,7 +20,7 @@ game_main:
     strh r1, [r0]
 
     copy_256x256_bg paused 87 2 20 10
-    copy_256x256_bg hud 49 1 10 9
+    copy_256x256_bg hud 67 1 10 9
     copy_256x256_bg field 6 0 4 8
 
     copy_32x32_sprite clear 201 5
@@ -87,17 +87,30 @@ skip_delay_cap:
     b game_loop
 continue_game:
 
+    ldr r0, =clear_timer
+    ldr r1, [r0]
+    cmp r1, #0
+    beq skip_clear_timer_down
+    sub r1, #1
+    str r1, [r0]
+    cmp r1, #0
+    bne skip_clear_timer_down
+    bl clean_clear_name
+skip_clear_timer_down:
+
     @ gravity
     add timer, #1
     cmp timer, r3                   @ When game timer reaches current maximum
     blt end_timer_handler           @ Handle a gravity frame, else skips it
     bl do_game_cycle
 end_timer_handler:
+
+    swi 0x5                         @Asks BIOS to wait for VBlank
+
     bl update_lines_cleared_counter
     bl update_score_counter
     bl update_hi_score_counter
-
-    swi 0x5                         @Asks BIOS to wait for VBlank
+    bl update_combo_counter
 
     @ draw grid
     bl draw_grid
@@ -411,6 +424,50 @@ update_hi_score_counter:
     swi 0x6
     lsl r1, #1
     add r1, r4
+
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+    sub r2, #2
+
+    mov r1, #10
+    swi 0x6
+    lsl r1, #1
+    add r1, r4
+
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+
+    pop {r0-r5, pc}
+
+.thumb_func
+.type update_combo_counter, %function
+update_combo_counter:
+    push {r0-r5, lr}
+
+    mov r3, #0x6
+    lsl r3, #24
+    mov r2, #10                     @VRAM + MapBase*0x800
+    lsl r2, #11
+    add r3, r2
+    ldr r2, =480
+    add r2, r3
+    add r2, #16
+
+    ldr r4, =1280
+    add r4, r3
+
+    ldr r0, =combo_count
+    ldr r0, [r0]
+    mov r1, #10
+    swi 0x6
+    lsl r1, #1
+    add r1, r4
+
+    mov r5, #64
 
     ldrh r3, [r1]
     strh r3, [r2]
