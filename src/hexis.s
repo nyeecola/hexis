@@ -183,6 +183,13 @@ fix_to_grid:
     ldrsb r1, [r2,r3]               @ Loads Y
     cmp r1, #21
     blt skip_reset_game
+
+    ldr r5, =hexis_grid
+    .rept 20
+    bl clear_animation
+    add r5, #10
+    .endr
+
     mov r0, r12
     mov sp, r0
     ldr r1, =reset_game
