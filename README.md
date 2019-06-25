@@ -1,5 +1,5 @@
 # Hexis
-![](docs/ss.png)   
+![](hexis.png)   
 Hexis is a game about fitting falling blocks together to clear completed lines.   
 It's made completely in assembly for the GNU Assembler included in devkitARM.
 
