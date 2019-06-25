@@ -183,6 +183,13 @@ fix_to_grid:
     ldrsb r1, [r2,r3]               @ Loads Y
     cmp r1, #21
     blt skip_reset_game
+
+    ldr r5, =hexis_grid
+    .rept 20
+    bl clear_animation
+    add r5, #10
+    .endr
+
     mov r0, r12
     mov sp, r0
     ldr r1, =reset_game
@@ -389,6 +396,19 @@ end_byte_loop:
     cmp r4, r0                      @ Unless it has reached the end of the grid
     blt line_loop
 
+    ldr r0, =combo_count
+    cmp r1, #0
+    bne continue_combo
+break_combo:
+    mov r2, #0
+    str r2, [r0]
+    b end_combo_check
+continue_combo:
+    ldr r2, [r0]
+    add r2, #1
+    str r2, [r0]
+end_combo_check:
+
     cmp r1, #0
     beq end_cycle
 
@@ -401,12 +421,24 @@ end_byte_loop:
 
     lsr r1, #3                     @Gets current level from lines_cleared
     add r1, #1
+
+    ldr r2, =combo_count
+    ldr r2, [r2]
+
+    mul r1, r2
     lsl r1, r3                     @Shifts level to get the score
 
     ldr r0, =score
     ldr r2, [r0]
     add r2, r1
     str r2, [r0]
+
+    ldr r0, =clear_timer
+    mov r1, #40
+    str r1, [r0]
+
+    mov r0, r3
+    bl show_clear_name
 
     ldr r0, =HIGH_SCORE
     ldrb r3, [r0, #1]
@@ -444,3 +476,113 @@ end_cycle:
     pop {r0-r5, pc}
 
 .ltorg
+
+.thumb_func
+.type show_clear_name, %function
+@r0 -> lines cleared
+show_clear_name:
+    push {r0-r3, r5, lr}
+
+    mov r3, #0x6
+    lsl r3, #24
+    mov r2, #10                     @VRAM + MapBase*0x800
+    lsl r2, #11
+    add r3, r2
+    ldr r2, =738
+    add r2, r3
+
+    ldr r1, =1280
+    add r1, r3
+
+    lsl r0, #7
+    add r1, r0
+
+    mov r5, #64
+
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    ldrh r3, [r1]
+    strh r3, [r2]
+    ldrh r3, [r1, r5]
+    strh r3, [r2, r5]
+    
+    pop {r0-r3, r5, pc}
+
+.thumb_func
+.type clean_clear_name, %function
+clean_clear_name:
+    push {r0-r3, r5, lr}
+
+    mov r3, #0x6
+    lsl r3, #24
+    mov r2, #10                     @VRAM + MapBase*0x800
+    lsl r2, #11
+    add r3, r2
+    ldr r2, =738
+    add r2, r3
+
+    mov r5, #64
+    mov r3, #0
+
+    strh r3, [r2]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    strh r3, [r2]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    strh r3, [r2]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    strh r3, [r2]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    strh r3, [r2]
+    strh r3, [r2, r5]
+    add r1, #2
+    add r2, #2
+    
+    strh r3, [r2]
+    strh r3, [r2, r5]
+    
+    pop {r0-r3, r5, pc}
